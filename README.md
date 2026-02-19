@@ -1,73 +1,161 @@
-# React + TypeScript + Vite
+# SQL Assistant — AI Chatbot
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A production-ready AI chatbot interface built with React + Vite + TypeScript that connects to a LangGraph-powered SQL agent backend. Ask questions in plain English and get intelligent, human-readable answers from your database.
 
-Currently, two official plugins are available:
+---
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## Tech Stack
 
-## React Compiler
+**Frontend**
+- React 19 + TypeScript
+- Vite 5
+- Tailwind CSS v3
+- shadcn/ui
+- Redux Toolkit
+- Axios
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+**Backend**
+- FastAPI
+- LangGraph
+- SQLAlchemy
 
-## Expanding the ESLint configuration
+---
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+## Project Structure
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
-
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+```
+src/
+├── api/                    # All backend API calls
+│   ├── client.ts           # Axios instance with base URL & interceptors
+│   ├── chat.api.ts         # Chat endpoint definitions + TypeScript types
+│   └── index.ts            # Re-exports
+│
+├── components/
+│   ├── ui/                 # shadcn generated components (do not edit)
+│   ├── atoms/              # Smallest building blocks (Avatar, Timestamp, TypingIndicator)
+│   ├── molecules/          # Composed from atoms (MessageBubble, ChatInput, ErrorBanner)
+│   └── organisms/          # Full sections (ChatWindow, MessageList, Sidebar)
+│
+├── hooks/                  # Custom React hooks
+│   ├── useChat.ts          # Core chat logic — components talk to Redux through this
+│   └── useScrollToBottom.ts
+│
+├── store/                  # Redux Toolkit state management
+│   ├── chatStore.ts        # Messages state + async thunk for API calls
+│   ├── uiStore.ts          # UI state (sidebar open/close)
+│   ├── index.ts            # Store configuration
+│   └── hooks.ts            # Typed useAppDispatch / useAppSelector
+│
+├── lib/
+│   ├── utils.ts            # shadcn cn() utility
+│   └── theme.tsx           # Dark/light mode context + localStorage persistence
+│
+├── pages/
+│   └── ChatPage.tsx        # Top-level page composition
+│
+└── App.tsx                 # Root — Provider + ThemeProvider
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+---
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+## Getting Started
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+### 1. Clone and install
+
+```bash
+git clone <your-repo-url>
+cd ai-chatbot
+npm install
+```
+
+### 2. Configure environment
+
+Create a `.env` file in the project root:
+
+```env
+VITE_API_URL=http://localhost:8000
+```
+
+### 3. Start the backend
+
+Make sure your FastAPI backend is running on port 8000. Your backend must have CORS enabled:
+
+```python
+from fastapi.middleware.cors import CORSMiddleware
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["http://localhost:5173"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+```
+
+### 4. Start the frontend
+
+```bash
+npm run dev
+```
+
+Open [http://localhost:5173](http://localhost:5173)
+
+---
+
+## API Contract
+
+The frontend expects the following from the backend:
+
+**Request** — `POST /ask`
+```json
+{
+  "question": "What products do we have?"
+}
+```
+
+**Response**
+```json
+{
+  "question": "What products do we have?",
+  "sql_query": "SELECT * FROM products;",
+  "result": "[('Laptop',), ('Mouse',)]",
+  "human_readable_result": "There are 3 products: Laptop, Mouse, and Keyboard.",
+  "error": null,
+  "attempts": 0
+}
+```
+
+The frontend displays `human_readable_result` if available, falls back to `error` if not.
+
+---
+
+## Features
+
+- **Dark / Light mode** — toggle in sidebar, persists across sessions
+- **Optimistic UI** — user message appears instantly before the API responds
+- **Typing indicator** — animated dots while waiting for a response
+- **Error display** — backend errors shown inline in the chat
+- **Auto-resizing input** — textarea grows as you type
+- **Keyboard shortcuts** — Enter to send, Shift+Enter for new line
+- **Clear conversation** — reset the chat session from the sidebar
+
+---
+
+## Architecture Principles
+
+- Components **never** call the API directly — always through `hooks/`
+- `hooks/` talk to Redux, Redux talks to `api/`
+- If the backend changes, only `src/api/` needs updating
+- If state management changes, only `src/store/` and `src/hooks/` need updating
+- `src/components/ui/` is owned by shadcn — never edit manually
+
+---
+
+## Available Scripts
+
+```bash
+npm run dev       # Start development server
+npm run build     # Production build
+npm run preview   # Preview production build
+npm run lint      # Run ESLint
 ```
