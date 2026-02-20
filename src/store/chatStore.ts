@@ -26,8 +26,8 @@ export const sendMessage = createAsyncThunk(
   "chat/sendMessage",
   async (content: string, { rejectWithValue }) => {
     try {
-      const data = await sendMessageApi({ question: content });
-      return data.human_readable_result ?? data.error ?? "No response";
+      const data = await sendMessageApi({ message: content });
+      return data.reply ??  "There was an issue with the response. Please try again.";
     } catch (err) {
       return rejectWithValue((err as Error).message);
     }

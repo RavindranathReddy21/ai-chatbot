@@ -1,17 +1,19 @@
 import client from "./client";
 
 export interface SendMessagePayload {
-  question: string;
+  message: string;
+  history?: { role: "user" | "assistant"; content: string }[];
 }
 
 export interface SendMessageResponse {
-  human_readable_result?: string;
-  error?: string;
+  reply: string;
+  tool_used?: string | null;
+  sql_query?: string | null;
 }
 
 export const sendMessage = async (
   payload: SendMessagePayload
 ): Promise<SendMessageResponse> => {
-  const { data } = await client.post<SendMessageResponse>("/ask", payload);
+  const { data } = await client.post<SendMessageResponse>("/chat", payload);
   return data;
 };
