@@ -35,8 +35,8 @@ export function Sidebar({ backendStatus }: SidebarProps) {
             )} />
           </div>
           <div>
-            <h1 className="text-sm font-semibold text-foreground leading-tight">SQL Assistant</h1>
-            <p className="text-xs text-muted-foreground">AI-powered queries</p>
+            <h1 className="text-md font-semibold text-foreground leading-tight">SQL Assistant</h1>
+            <p className="text-sm text-muted-foreground">AI-powered queries</p>
           </div>
         </div>
       </div>
