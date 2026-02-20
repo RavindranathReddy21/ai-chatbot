@@ -9,7 +9,7 @@ export function Timestamp({ timestamp }: TimestampProps) {
   }).format(new Date(timestamp));
 
   return (
-    <span className="text-[10px] text-muted-foreground mt-1 select-none">
+    <span className="text-muted-foreground mt-1 select-none chat-timestamp">
       {formatted}
     </span>
   );
