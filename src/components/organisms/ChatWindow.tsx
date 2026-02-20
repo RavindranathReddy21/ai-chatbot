@@ -22,8 +22,8 @@ export function ChatWindow({ backendStatus }: ChatWindowProps) {
     <div className="flex flex-col h-full w-full bg-background">
       <div className="flex items-center justify-between px-6 py-3.5 border-b border-border/60 bg-card/60 glass shrink-0 shadow-soft">
         <div>
-          <h2 className="text-sm font-semibold text-foreground">Conversation</h2>
-          <p className="text-xs text-muted-foreground mt-0.5">
+          <h2 className="text-lg font-semibold text-foreground">Conversation</h2>
+          <p className="text-md text-muted-foreground mt-0.5">
             {isLoading
               ? "Querying your database..."
               : messages.length === 0
@@ -31,8 +31,8 @@ export function ChatWindow({ backendStatus }: ChatWindowProps) {
               : `${messages.length} message${messages.length !== 1 ? "s" : ""} this session`}
           </p>
         </div>
-        <div className={cn("flex items-center gap-1.5 px-3 py-1.5 rounded-full border text-xs font-medium transition-all duration-300", statusConfig.pill)}>
-          <span className={cn("h-1.5 w-1.5 rounded-full shrink-0", statusConfig.dot)} />
+        <div className={cn("flex items-center gap-1.5 px-3 py-1.5 rounded-full border text-md font-medium transition-all duration-300", statusConfig.pill)}>
+          <span className={cn("h-2.5 w-2.5 rounded-full shrink-0", statusConfig.dot)} />
           {isLoading ? "Processing" : statusConfig.label}
         </div>
       </div>

@@ -56,7 +56,7 @@ export function Sidebar({ backendStatus }: SidebarProps) {
           <div className="flex items-center justify-between">
             <span className="chat-sidebar-text text-muted-foreground">Backend</span>
             <span className={cn("flex items-center gap-1.5 chat-sidebar-text font-medium", statusConfig.text)}>
-              <span className={cn("h-1.5 w-1.5 rounded-full shrink-0", statusConfig.dot)} />
+              <span className={cn("h-2.5 w-2.5 rounded-full shrink-0", statusConfig.dot)} />
               {statusConfig.label}
             </span>
           </div>
